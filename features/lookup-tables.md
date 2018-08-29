@@ -5,13 +5,13 @@ date: 2017-02-23 15:15:00 Z
 
 # Lookup tables
 
-Lookup tables (AKA cross reference tables) enable users to quickly and easily lookup frequently used data that is static and immutable.
+Lookup tables (AKA cross reference tables) enable users to quickly and easily lookup frequently used data with Workato recipes.
 
 Data in lookup tables is typically organized like a database table, with columns and rows of data. You can lookup an entry within the specified lookup table by using:
 * Any column
 * Multiple columns
 
-For example, if I'm trying to move accounting entries from my sales app into my accounting app i.e. Salesforce to Intacct, I might find that both departments are using different account codes internally. In order to ensure data is synced accurately from Salesforce into Intacct, I would need to take the account codes from Salesforce, find the matching codes in Intacct, and create the Intacct accounting entries using the corresponding Intacct account codes. In the following table, any Salesforce entries coming in with the code 34267 will be written into Intacct under the code 6754.
+For example, when trying to move accounting entries from a sales app into an accounting app i.e. Salesforce to Intacct, users might find that departments in both apps have different account codes internally. In order to ensure data is synced accurately from Salesforce into Intacct, users will search for the account codes from Salesforce, find the matching codes in Intacct, and create the Intacct accounting entries using the corresponding Intacct account codes. In the following table, any Salesforce entries coming in with the code 34267 will be written into Intacct under the code 6754.
 
 ![Example lookup table](/assets/images/features/lookup-tables/example-lookup-table.png)
 *Lookup table with the account ID in Salesforce, account ID in Intacct, and the account names*
@@ -29,22 +29,20 @@ There are three ways to upload data into your lookup tables:
 - Add new entries manually
 - Add new entries via a recipe
 
-Note: Lookup tables are immutable and the existing entries cannot be modified or deleted.
-
 ## Importing an existing CSV file
-The GIF below walks you through the process of creating a lookup table and loading it with data imported from a CSV file.
+The GIF below walks you through the process of creating a lookup table and loading it with data imported from a CSV file. Please note that lookup tables have a 5 column and 10,000 row limit.
 
-![Lookup1](/assets/images/features/lookup-tables/lookup-tables-1.gif)
+![Lookup1](/assets/images/features/lookup-tables/lookup-tables-csv.gif)
 *Creating a new lookup table and importing a CSV file*
 
 ## Adding new entries manually
-You can manually enter additional lookup table entries.
+You can manually enter additional lookup table entries by clicking on 'setup your lookup table manually'. Add your column names and then use the 'Add new entry' button for every row you wish to add.
 
-![Lookup2](/assets/images/features/lookup-tables/lookup-tables-2.png)
-*Click on the Add new entry button*
+![Lookup2](/assets/images/features/lookup-tables/lookup-table-manual-setup.png)
+*Click to select manual setup*
 
-![Lookup3](/assets/images/features/lookup-tables/lookup-tables-3.png)
-*A new blank row will be generated for values to be entered*
+![Lookup3](/assets/images/features/lookup-tables/lookup-table-manual-setup-addentry.png)
+*Add a row with the Add new entry button*
 
 ## Adding new entries via a recipe
 There is a **Lookup table** connector that allows you to automate your work with lookup tables. This connector supports [adding of new entries](#add-entry-action) via a recipe.
@@ -55,6 +53,8 @@ The **Lookup table** utility connector allows you to work with your tables via r
 * Lookup entry
 * Search entries
 * Add entry
+* Update entry
+* Delete entry
 
 ### Add entry action
 Add a new entry to an existing lookup table. You can use this action to keep your lookup tables updated, e.g. read newly created job titles from your human resources application and create a new entry for that job title in your lookup table.
@@ -82,6 +82,19 @@ The search entries action works similarly to the lookup action. The main differe
 
 Use this if you expect a list of matching entries to be returned, and wish to process the list accordingly.
 
+### Update entry action
+The update entry action should be used after a search entries action or a lookup entry action. Both aforementioned actions return one or more rows in the specified lookup table that can be updated with this action.
+
+Use the Entry ID pill returned from a search or a lookup action in the required **Entry ID** field and then fill in the fields you wish to update below.
+
+![Lookup6](/assets/images/features/lookup-tables/lookup-table-update-entry.png)
+*Entry ID can be found in the app data as output from the search or lookup step*
+
+### Delete entry action
+The delete entry action should be used after a search entries action or a lookup entry action. Both aforementioned actions return one or more rows in the specified lookup table that can be deleted with this action.
+
+The entire row of data of the specified Entry ID is removed with this action. 
+
 ## Lookup table formulas
 Instead of using an action step to carry out the entry lookup, you can also use a formula to lookup entries in your lookup table. This is as efficient as the lookup action and can be done within the input field without requiring additional actions.
 
@@ -91,7 +104,7 @@ lookup(`table name`,`column name for search`: `data pill`)[`column name for resu
 
 ### Performing lookup on in memory table
 
-Output of search entries can be used as in memory lookup table. In memory lookup function is useful when a recipe invokes the `lookup` function on the same lookup table 1000s of times. 
+Output of search entries can be used as in memory lookup table. In memory lookup function is useful when a recipe invokes the `lookup` function on the same lookup table 1000s of times.
 
 To use the lookup formula on a in memory table, set the input field to formula mode, and enter the formula in this format:
 
